@@ -6,15 +6,17 @@ from lib import QApplication
 from lib import QMainWindow
 from lib import Toolbar
 from lib import MainFrame
-from lib import load_file
+from lib import load_css
 from lib import CSS_FILE_PATH
+from lib import CSS_COLORS_FILE_PATH
 
 class MainWindow(QMainWindow):
     """
     Customized QMainWindow.
     """
 
-    theme = load_file(CSS_FILE_PATH)
+    theme = load_css(CSS_FILE_PATH,
+                     CSS_COLORS_FILE_PATH)
 
     def __init__(self) -> None:
         super().__init__()
