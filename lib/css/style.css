@@ -1,0 +1,5 @@
+QWidget {
+    background-color: --dark;
+    font-size: 12px;
+    font-weight: bold;
+}
