@@ -1,6 +1,5 @@
 """
 Module contains all the widgets class to create UI with Qt library
-
 """
 import re
 import csv

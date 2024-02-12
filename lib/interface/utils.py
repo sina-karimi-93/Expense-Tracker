@@ -1,33 +1,7 @@
 """
-Utils module contain classes and functions helper
--> classes:
-        SingleTon:
-             single ton base class
-        SharedObject:
-             single ton share object will helps to reduce complexity
-             by sharing methods in unbound way
-        DataFormater:
-             struct and format the interface data
-        DropsMapping:
-             create structure for drops(dict)
-
-
-
--> functions:
-         get_requests:
-              send http GET requests
-
-         get_wiring_block:
-              fetch wiring block data from drive works
-
-         load_file:
-               function to load json files from disk
-
-         check_image_exists:
-               will check if the given image file path exists
-               we used this function because Qt not raising any error if
-               the it cannot open the image file
-
+This module contains function and classes
+for logging, opening files, sharing state
+and ...
 """
 import re
 import csv
