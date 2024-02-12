@@ -2,18 +2,19 @@
 Main module of the program that shows
 the GUI.
 """
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QMainWindow
-from src import MainFrame
-from src import open_file
-from src import CSS_FILE_PATH
+from lib import QApplication
+from lib import QMainWindow
+from lib import Toolbar
+from lib import MainFrame
+from lib import load_file
+from lib import CSS_FILE_PATH
 
 class MainWindow(QMainWindow):
     """
     Customized QMainWindow.
     """
 
-    theme = open_file(CSS_FILE_PATH)
+    theme = load_file(CSS_FILE_PATH)
 
     def __init__(self) -> None:
         super().__init__()
@@ -25,6 +26,8 @@ class MainWindow(QMainWindow):
         Initialize ui widgets such as central widget,
         toolbar and, etc.
         """
+        self.toolbar = Toolbar()
+        self.addToolBar(self.toolbar)
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
 
