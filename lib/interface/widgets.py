@@ -52,6 +52,7 @@ from PyQt5.QtWidgets import QGraphicsDropShadowEffect
 from PyQt5.QtWidgets import QProgressBar
 from PyQt5.QtWidgets import QTabWidget
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QDateEdit
 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QIconEngine
@@ -923,13 +924,16 @@ class Combobox(QComboBox):
         default_item: str = None,
         width: int = None,
         min_width: int = None,
-        max_width: int = None,
+        max_width: int = 10000,
         max_length: int = 20,
         tool_tip: str = None,
         validator: object = None,
         value_limit: tuple = None,
         object_name: str = None,
         not_zero: bool = True,
+        use_effect: bool = True,
+        effect_color: str = "#f89fa2",
+        effect_blur_radius: int = 15,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -952,6 +956,13 @@ class Combobox(QComboBox):
         if editable:
             self.lineEdit().setAlignment(Qt.AlignCenter)
             self.lineEdit().setMaxLength(max_length)
+
+        if use_effect:
+            effect = QGraphicsDropShadowEffect(self)
+            effect.setColor(QColor(effect_color))
+            effect.setOffset(0, 0)
+            effect.setBlurRadius(effect_blur_radius)
+            self.setGraphicsEffect(effect)
 
     def get_items(self) -> list:
         """
@@ -1214,7 +1225,7 @@ class LabelCombobox(Frame):
         callback_func: object = void_function,
         width: int = None,
         min_width: int = 80,
-        max_width: int = 0,
+        max_width: int = 10000,
         frame_width: int = 0,
         max_length: int = 20,
         value_limit: tuple = (0, 2147483647),
@@ -1224,6 +1235,9 @@ class LabelCombobox(Frame):
         object_name: str = None,
         not_zero: bool = None,
         align_center:bool = False,
+        use_effect: bool = True,
+        effect_color: str = "#f89fa2",
+        effect_blur_radius: int = 15,
         **kwargs,
     ):
         super().__init__(layout=layout, **kwargs)
@@ -1249,7 +1263,10 @@ class LabelCombobox(Frame):
             validator=validator,
             tool_tip=tool_tip,
             object_name=object_name,
-            not_zero=not_zero)
+            not_zero=not_zero,
+            use_effect=use_effect,
+            effect_color=effect_color,
+            effect_blur_radius=effect_blur_radius)
         if frame_width:
             self.setFixedWidth(frame_width)
     
@@ -1395,8 +1412,11 @@ class Entry(QLineEdit):
         not_zero: bool = None,
         is_password: bool = False,
         grid_positions: tuple = None,
-        **kwargs,
-    ):
+        use_effect: bool = True,
+        effect_color: str = "#f89fa2",
+        effect_blur_radius: int = 10,
+                **kwargs,
+            ):
         super().__init__(**kwargs)
         self.setObjectName(object_name)
         self.setToolTip(tool_tip)
@@ -1420,6 +1440,12 @@ class Entry(QLineEdit):
         self.focus_out_callback = focus_out_callback
         self.key_press_callback = key_press_callback
         self.grid_positions = grid_positions
+        if use_effect:
+            effect = QGraphicsDropShadowEffect(self)
+            effect.setColor(QColor(effect_color))
+            effect.setOffset(0, 0)
+            effect.setBlurRadius(effect_blur_radius)
+            self.setGraphicsEffect(effect)
 
     def set_callbacks(self, *callbacks) -> None:
         """
@@ -1617,6 +1643,9 @@ class LabelEntry(Frame):
         not_zero: bool = None,
         is_password: bool = False,
         align_center: bool = False,
+        use_effect: bool = True,
+        effect_color: str = "#f89fa2",
+        effect_blur_radius: int = 15,
         **kwargs,
     ):
         super().__init__(layout, **kwargs)
@@ -1641,7 +1670,10 @@ class LabelEntry(Frame):
             key_press_callback=key_press_callback,
             is_upper=is_upper,
             not_zero=not_zero,
-            is_password=is_password)
+            is_password=is_password,
+            use_effect=use_effect,
+            effect_color=effect_color,
+            effect_blur_radius=effect_blur_radius)
         self.grid_positions = grid_positions
         if frame_width:
             self.setFixedWidth(frame_width)
@@ -2951,7 +2983,6 @@ class ProcessingAnimation(Frame):
         """
         self.animation.stop()
         self.effect.setColor(QColor("transparent"))
-
 
 class Stretch(QWidget):
 

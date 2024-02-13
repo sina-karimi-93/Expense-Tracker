@@ -28,8 +28,6 @@ class MainWindow(QMainWindow):
         Initialize ui widgets such as central widget,
         toolbar and, etc.
         """
-        self.toolbar = Toolbar()
-        self.addToolBar(self.toolbar)
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
 
