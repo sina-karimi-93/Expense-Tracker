@@ -45,11 +45,13 @@ QPushButton {
     padding-top: 6px;
     padding-bottom: 6px;
     border-radius: 13px;
+    outline: none;
 }
 
 QPushButton:hover {
     color: white;
     background-color: --color5;
+    outline: none;
 }
 
 QPushButton#add-expense {
