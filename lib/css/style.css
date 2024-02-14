@@ -1,26 +1,35 @@
 QWidget {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: --dark;
+    background-color: --color1;
     font-size: 12px;
-    font-weight: bold;
-    font-weight: 1000;
 }
 
 QFrame {
     border-radius: 20px;
+}
+
+QFrame#add-expense-frame {
     margin-right: 5px;
     margin-left: 5px;
 }
 
+QFrame#illustration-frame {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
 QLabel {
     color: white;
     letter-spacing: 0.8px;
+    font-weight: 1000;
 }
 
 QLineEdit {
     color: white;
     font-size: 14px;
     font-family: 'Calibry';
+    font-weight: 1000;
     border: 1.2px solid --color6;
     border: none;
     border-radius: 13px;
@@ -29,6 +38,7 @@ QLineEdit {
 }
 
 QDateEdit {
+    font-weight: 1000;
     color: white;
     border: none;
     padding-top: 5px;
@@ -37,7 +47,8 @@ QDateEdit {
 }
 
 QPushButton {
-    color: --dark;
+    font-weight: 1000;
+    color: --color1;
     background-color: white;
     margin-top: 5px;
     margin-left: 8px;
@@ -56,4 +67,113 @@ QPushButton:hover {
 
 QPushButton#add-expense {
     margin-bottom: 10px;
+}
+
+
+
+
+/* ============================ SCROLLAREA ============================ */
+QScrollArea {
+    border: none;
+}
+
+QScrollBar::add-page,
+QScrollBar::sub-page {
+    background: transparent;
+}
+
+QScrollBar {
+    height: 15px;
+    width: 15px;
+    background: transparent;
+    margin-left: 2px;
+}
+
+QScrollBar::handle {
+    min-height: 40px;
+    background: --color7;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:hover {
+    background: --color4;
+}
+
+QScrollBar::add-line {
+    background: none;
+}
+
+QScrollBar::sub-line {
+    background: none;
+}
+
+
+/* ============================ TABLE ============================ */
+QTableCornerButton::section {
+    background-color: transparent;
+}
+
+QHeaderView {
+    font-weight: bold;
+}
+
+QHeaderView::section {
+    color: white;
+    background-color: transparent;
+    padding: 2px 1px;
+    padding-left: 5px;
+}
+
+
+QTableView {
+    border-radius: 5px;
+    outline: none;
+}
+
+
+QTableView::item {
+    color: white;
+    background-color: --color2;
+}
+
+QTableView::item:selected {
+    color: --color1;
+    background: --color5;
+}
+
+
+/* ============================ TAB ============================ */
+
+QTabWidget::pane {
+    border: 2px solid #153b4d;
+    border-radius: 5px;
+}
+
+
+QTabBar::tab {
+    color: #303030;
+    background: rgb(194, 194, 194);
+    font-weight: bold;
+    border: none;
+    padding: 3px 0px;
+    width: 127px;
+}
+
+QTabWidget#database_viewer::pane {
+    border: none;
+}
+
+QTabBar#database_viewer::tab {
+    width: 200px;
+}
+
+
+QTabBar::tab:hover {
+    background: #a7bbb7;
+}
+
+QTabBar::tab:selected {
+    color: white;
+    font-weight: bold;
+    background: #00614e;
 }

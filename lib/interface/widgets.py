@@ -2102,10 +2102,10 @@ class HorizontalTable(Table):
                 except IndexError:
                     pass
             item = QTableWidgetItem(str(value))
-            item.setBackground(QBrush(QColor("red")))
             self.setItem(row, column, item)
 
     def insert_data(self,
+                    headers: list,
                     data: list,
                     width: Union[list, int] = None) -> None:
         """
@@ -2119,10 +2119,9 @@ class HorizontalTable(Table):
         self.horizontalHeader().show()
         if not isinstance(data[0], dict):
             data = self.convert_before_insert(data)
-        h_headers = list(map(lambda x: str(x), data[0].keys()))
-        self.setup_view(h_headers=h_headers,
+        self.setup_view(h_headers=headers,
                         row_count=len(data),
-                        column_count=len(h_headers),
+                        column_count=len(headers),
                         has_width=width)
         for row_index, document in enumerate(data):
             value = list(document.values())

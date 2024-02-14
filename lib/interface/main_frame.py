@@ -9,6 +9,7 @@ from .widgets import Button
 from .widgets import QGraphicsDropShadowEffect
 from .widgets import QColor
 from .widgets import DateEntry
+from .widgets import HorizontalTable
 from .utils import log
 from .utils import load_json
 from .utils import write_json
@@ -18,7 +19,7 @@ class AddExpenseFrame(Frame):
     def __init__(self,
                  add_expense_callback: Callable):
         super().__init__(layout=Vertical)
-        
+        self.setObjectName("add-expense-frame")
         self.setup_frame()
 
         self.init_widgets(add_expense_callback=add_expense_callback)
@@ -75,10 +76,13 @@ class AddExpenseFrame(Frame):
         quantity = self.quantity.get_value() or 1
         self.overall_price.set_value(price * quantity)
 
-class TestFrame(Frame):
-    def __init__(self) -> None:
+class IllustrationFrame(Frame):
+    def __init__(self,
+                 test_data: list) -> None:
         super().__init__(layout=Vertical)
+        self.setObjectName("illustration-frame")
         self.setup_frame()
+        self.init_widgets(test_data)
 
     def setup_frame(self) -> None:
         """
@@ -92,6 +96,20 @@ class TestFrame(Frame):
         effect.setBlurRadius(15)
         self.setGraphicsEffect(effect)
 
+    def init_widgets(self,
+                    test_data: list) -> None:
+        """
+        Initializes the widgets.
+        """
+        test_data += test_data
+        test_data += test_data
+
+        self.table = HorizontalTable(editable=True)
+        headers = ["Title", "Price", "Quantity",
+                   "Overall Price", "Categoty",
+                   "Date"]
+        self.table.insert_data(headers, test_data)
+
 class MainFrame(Frame):
     """
     Main Frame of the app that contains
@@ -104,7 +122,7 @@ class MainFrame(Frame):
         self.add_expense_frame = AddExpenseFrame(add_expense_callback=self.add_expense_callback)
 
         self.add_stretch()
-        self.iii = TestFrame()
+        self.iii = IllustrationFrame(self.test_data)
 
     def add_expense_callback(self) -> None:
         """
