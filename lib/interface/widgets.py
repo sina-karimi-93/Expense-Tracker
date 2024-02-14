@@ -10,7 +10,7 @@ from typing import Union
 from typing import NewType
 from PyQt5 import QtCore
 from PyQt5 import QtGui
-
+from PyQt5.QtWidgets import QAbstractSpinBox
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QAction
 from PyQt5.QtWidgets import QMenu
@@ -2984,6 +2984,42 @@ class ProcessingAnimation(Frame):
         self.animation.stop()
         self.effect.setColor(QColor("transparent"))
 
+
+class DateEntry(Frame):
+
+    def __init__(self,
+                 label: str = "",
+                 layout: object = Vertical,
+                 align_center: bool = True,
+                 width: int = 280,
+                 frame_width: int = 200,
+                 calendarPopup: bool = False,
+                 use_effect: bool = True,
+                 effect_color: str = "#f89fa2",
+                 effect_blur_radius: int = 15,) -> None:
+        super().__init__(layout=layout)
+        if align_center:
+            self.main_layout.setAlignment(Qt.AlignCenter)
+        self.label = Label(label=label)
+        self.date_entry = QDateEdit(calendarPopup=calendarPopup)
+        self.date_entry.setMinimumWidth(width)
+        self.date_entry.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.date_entry.setAlignment(Qt.AlignCenter)
+        self.date_entry.setDateTime(datetime.now())
+        if use_effect:
+            effect = QGraphicsDropShadowEffect(self.date_entry)
+            effect.setColor(QColor(effect_color))
+            effect.setOffset(0, 0)
+            effect.setBlurRadius(effect_blur_radius)
+            self.date_entry.setGraphicsEffect(effect)
+
+    def get_value(self) -> str:
+        """
+        Returns the date entry value.
+        """
+        value = self.date_entry.date().getDate()
+        return datetime(*value).strftime("%Y-%m-%d")
+    
 class Stretch(QWidget):
 
     def __init__(self,
@@ -2999,15 +3035,6 @@ WIDGETS_LIST = {
 }
 
 VALIDATORS = {
-    "string": ONLY_STRING_PATTERN,
-    "email": EMAIL_PATTERN,
-    "username": USERNAME_PATTERN,
-    "uppercase_string": ONLY_STRING_UPPERCASE_PATTERN,
-    "section_name_pattern": SECTION_NAME_PATTERN,
-    "section_names": SECTION_NAMES_DROP_PATTERN,
-    "string_with_space": ONLY_STRING_SPACE_PATTERN,
-    "string_with_hiphen": ONLY_STRING_HIPHEN_PATTERN,
-    "string_int": ONLY_INT_PATTERN,
-    "string_multiple_int": ONLY_MULTIPLE_INT_PATTERN
+    "string": ONLY_STRING_SPACE_PATTERN,
     # "decimal": JUST_FLOAT_PATTERN
 }

@@ -8,6 +8,8 @@ QWidget {
 
 QFrame {
     border-radius: 20px;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 QLabel {
@@ -26,16 +28,30 @@ QLineEdit {
     padding-bottom: 5px;
 }
 
-
-
 QDateEdit {
     color: white;
     border: none;
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 13px;
-    margin-left: 7px;
-    margin-right: 7px;
 }
 
-QDateEdit::
+QPushButton {
+    color: --dark;
+    background-color: white;
+    margin-top: 5px;
+    margin-left: 8px;
+    margin-right: 5px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-radius: 13px;
+}
+
+QPushButton:hover {
+    color: white;
+    background-color: --color5;
+}
+
+QPushButton#add-expense {
+    margin-bottom: 10px;
+}

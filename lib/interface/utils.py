@@ -163,7 +163,7 @@ class Logger:
 
 
 log = Logger()
-# log.disable_log_level(2)
+log.disable_log_level(2)
 log.disable_log_level(3)
 
 

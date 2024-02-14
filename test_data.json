@@ -1,0 +1,10 @@
+[
+    {
+        "title": "Meat",
+        "price": 10.0,
+        "quantity": 3,
+        "overall_price": 30.0,
+        "category": "Food",
+        "date": "2024-02-14"
+    }
+]
