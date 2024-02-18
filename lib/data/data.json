@@ -142,5 +142,13 @@
         "overall_price": 499.0,
         "category": "Technology",
         "date": "04-11-2023"
+    },
+    {
+        "title": "Vegtables",
+        "price": 20.0,
+        "quantity": 1,
+        "overall_price": 20.0,
+        "category": "Food",
+        "date": "18-02-2024"
     }
 ]

@@ -274,8 +274,13 @@ class ToolsFrame(Frame):
         """
         Initializes the widgets.
         """
+        self.illustration_count = LabelEntry(label="ITEMS ILLUSTRATION COUNT",
+                                   default_value=100,
+                                   validator="int",
+                                   callback_func=print,
+                                   object_name="entry")
         self.default_from_date = DateEntry(label="DEFAULT FROM DATE",
-                                   default_date=datetime.now(),
+                                   default_date=datetime(2023,1,1),
                                    width=250,
                                    callback_func=print)
         self.add_stretch()
