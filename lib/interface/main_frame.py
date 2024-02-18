@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from typing import Callable
 from lib.errors import DataValidationFailed
 from .widgets import Frame
@@ -33,7 +34,7 @@ class AddExpenseFrame(Frame):
         effect = QGraphicsDropShadowEffect(self)
         effect.setOffset(0, 0)
         effect.setColor(QColor("#434b4e"))
-        effect.setBlurRadius(15)
+        effect.setBlurRadius(20)
         self.setGraphicsEffect(effect)
     
     def init_widgets(self,
@@ -76,7 +77,47 @@ class AddExpenseFrame(Frame):
         quantity = self.quantity.get_value() or 1
         self.overall_price.set_value(price * quantity)
 
+class IllustrationFiltersFrame(Frame):
+    """
+    This frame has widgets to filter the
+    expense for showing in the illustration
+    frame.
+    """
+
+    def __init__(self, filters_callback: Callable) -> None:
+        super().__init__(layout=Horizontal)
+
+        self.init_widgets(filters_callback)
+    
+    def init_widgets(self,
+                     filters_callback: Callable) -> None:
+        """
+        Initializes the widgets.
+        """
+        from_date = datetime(year=2024, month=1, day=1)
+        self.from_date = DateEntry(label="FROM DATE",
+                                   default_date=from_date,
+                                   width=200,
+                                   callback_func=filters_callback)
+        self.to_date = DateEntry(label="TO DATE",
+                                 width=200,
+                                 callback_func=filters_callback)
+        self.title = LabelEntry(label="TITLE",
+                                width=200,
+                                validator="string",
+                                callback_func=filters_callback)
+        self.categoty = LabelEntry(label="CATEGORY",
+                                   width=200,
+                                   validator="string",
+                                   callback_func=filters_callback)
+
 class IllustrationFrame(Frame):
+    """
+    This frame is for showing the inserted
+    expenses, filter them based on different
+    items.
+    """
+
     def __init__(self,
                  test_data: list) -> None:
         super().__init__(layout=Vertical)
@@ -93,7 +134,7 @@ class IllustrationFrame(Frame):
         effect = QGraphicsDropShadowEffect(self)
         effect.setOffset(0, 0)
         effect.setColor(QColor("#434b4e"))
-        effect.setBlurRadius(15)
+        effect.setBlurRadius(20)
         self.setGraphicsEffect(effect)
 
     def init_widgets(self,
@@ -101,14 +142,24 @@ class IllustrationFrame(Frame):
         """
         Initializes the widgets.
         """
-        test_data += test_data
-        test_data += test_data
+
+        self.illustration_filter = IllustrationFiltersFrame(
+            self.illustration_filters_callback)
 
         self.table = HorizontalTable(editable=True)
         headers = ["Title", "Price", "Quantity",
                    "Overall Price", "Categoty",
                    "Date"]
         self.table.insert_data(headers, test_data)
+
+    def illustration_filters_callback(self) -> None:
+        """
+        This methos is a callback for the widgets
+        in the IllustrationFiltersFrame to filter
+        the data based on the user inputs.
+        """
+        values = self.filter_illustration.get_values()
+        log(values, pretty=True, color="yellow")
 
 class MainFrame(Frame):
     """

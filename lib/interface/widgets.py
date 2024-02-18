@@ -2988,29 +2988,35 @@ class DateEntry(Frame):
 
     def __init__(self,
                  label: str = "",
+                 default_date: datetime = datetime.now(),
                  layout: object = Vertical,
                  align_center: bool = True,
                  width: int = 280,
-                 frame_width: int = 200,
+                 frame_width: int = 0,
                  calendarPopup: bool = False,
+                 callback_func: callable = void_function,
                  use_effect: bool = True,
                  effect_color: str = "#f89fa2",
-                 effect_blur_radius: int = 15,) -> None:
+                 effect_blur_radius: int = 15) -> None:
         super().__init__(layout=layout)
         if align_center:
             self.main_layout.setAlignment(Qt.AlignCenter)
+        if frame_width:
+            self.setFixedWidth(frame_width)
         self.label = Label(label=label)
         self.date_entry = QDateEdit(calendarPopup=calendarPopup)
         self.date_entry.setMinimumWidth(width)
         self.date_entry.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.date_entry.setAlignment(Qt.AlignCenter)
-        self.date_entry.setDateTime(datetime.now())
+        self.date_entry.setDateTime(default_date)
+        self.date_entry.dateChanged.connect(callback_func)
         if use_effect:
             effect = QGraphicsDropShadowEffect(self.date_entry)
             effect.setColor(QColor(effect_color))
             effect.setOffset(0, 0)
             effect.setBlurRadius(effect_blur_radius)
             self.date_entry.setGraphicsEffect(effect)
+        
 
     def get_value(self) -> str:
         """
