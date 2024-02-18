@@ -21,7 +21,6 @@ QFrame#illustration-frame {
 
 QLabel {
     color: white;
-    letter-spacing: 0.8px;
     font-weight: 1000;
 }
 
@@ -32,9 +31,14 @@ QLineEdit {
     font-weight: 1000;
     border: 1.2px solid --color6;
     border: none;
-    border-radius: 13px;
     padding-top: 5px;
     padding-bottom: 5px;
+    selection-color: --color8;
+    selection-background-color: --color5;
+}
+
+QLineEdit#entry {
+    border-radius: 13px;
 }
 
 QDateEdit {
@@ -44,6 +48,8 @@ QDateEdit {
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 13px;
+    selection-color: --color8;
+    selection-background-color: --color5;
 }
 
 QPushButton {

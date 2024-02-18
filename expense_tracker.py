@@ -4,7 +4,7 @@ the GUI.
 """
 from lib import QApplication
 from lib import QMainWindow
-from lib import Toolbar
+from lib import DataHandler
 from lib import MainFrame
 from lib import load_css
 from lib import CSS_FILE_PATH
@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         Initialize ui widgets such as central widget,
         toolbar and, etc.
         """
-        self.main_frame = MainFrame()
+        self.main_frame = MainFrame(data_handler=DataHandler)
         self.setCentralWidget(self.main_frame)
 
     def setup_window(self) -> None:

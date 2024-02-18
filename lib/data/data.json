@@ -1,0 +1,146 @@
+[
+    {
+        "title": "Meat",
+        "price": 11.0,
+        "quantity": 1,
+        "overall_price": 11.0,
+        "category": "Food",
+        "date": "18-02-2024"
+    },
+    {
+        "title": "Rice",
+        "price": 15.0,
+        "quantity": 3,
+        "overall_price": 45.0,
+        "category": "Food",
+        "date": "18-03-2023"
+    },
+    {
+        "title": "Fruits",
+        "price": 7.4,
+        "quantity": 5,
+        "overall_price": 37.0,
+        "category": "Food",
+        "date": "18-03-2023"
+    },
+    {
+        "title": "Mouse",
+        "price": 70.0,
+        "quantity": 1,
+        "overall_price": 70.0,
+        "category": "Technology",
+        "date": "01-05-2023"
+    },
+    {
+        "title": "Keyboard",
+        "price": 110.0,
+        "quantity": 1,
+        "overall_price": 110.0,
+        "category": "Technology",
+        "date": "01-05-2023"
+    },
+    {
+        "title": "AUX Cable",
+        "price": 110.0,
+        "quantity": 1,
+        "overall_price": 110.0,
+        "category": "Technology",
+        "date": "16-06-2023"
+    },
+    {
+        "title": "Shoes",
+        "price": 120.0,
+        "quantity": 2,
+        "overall_price": 240.0,
+        "category": "Cloth",
+        "date": "25-07-2023"
+    },
+    {
+        "title": "Hat",
+        "price": 30.0,
+        "quantity": 1,
+        "overall_price": 30.0,
+        "category": "Cloth",
+        "date": "25-07-2023"
+    },
+    {
+        "title": "Pants",
+        "price": 89.99,
+        "quantity": 1,
+        "overall_price": 89.99,
+        "category": "Cloth",
+        "date": "25-07-2023"
+    },
+    {
+        "title": "Tshirt",
+        "price": 50.0,
+        "quantity": 2,
+        "overall_price": 100.0,
+        "category": "Cloth",
+        "date": "13-08-2023"
+    },
+    {
+        "title": "Fast Food",
+        "price": 33.0,
+        "quantity": 1,
+        "overall_price": 33.0,
+        "category": "Food",
+        "date": "13-08-2023"
+    },
+    {
+        "title": "Gas",
+        "price": 40.0,
+        "quantity": 1,
+        "overall_price": 40.0,
+        "category": "Car",
+        "date": "18-09-2023"
+    },
+    {
+        "title": "Spoon",
+        "price": 7.13,
+        "quantity": 2,
+        "overall_price": 14.26,
+        "category": "Kitchen",
+        "date": "18-10-2023"
+    },
+    {
+        "title": "Watch",
+        "price": 65.0,
+        "quantity": 1,
+        "overall_price": 65.0,
+        "category": "Accessories",
+        "date": "02-01-2024"
+    },
+    {
+        "title": "GTA",
+        "price": 55.0,
+        "quantity": 1,
+        "overall_price": 55.0,
+        "category": "Video Game",
+        "date": "04-11-2023"
+    },
+    {
+        "title": "FarCry6",
+        "price": 45.0,
+        "quantity": 1,
+        "overall_price": 45.0,
+        "category": "Video Game",
+        "date": "04-11-2023"
+    },
+    {
+        "title": "Death Stranding",
+        "price": 50.0,
+        "quantity": 1,
+        "overall_price": 50.0,
+        "category": "Video Game",
+        "date": "04-11-2023"
+    },
+    {
+        "title": "XBOX X",
+        "price": 499.0,
+        "quantity": 1,
+        "overall_price": 499.0,
+        "category": "Technology",
+        "date": "04-11-2023"
+    }
+]

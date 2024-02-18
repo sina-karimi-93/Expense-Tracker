@@ -92,10 +92,8 @@ class DataHandler:
         <- Return
             list of expenses
         """
-        from_date = datetime.strptime(filters.pop("from_date"),
-                                      DATE_FORMAT)
-        to_date = datetime.strptime(filters.pop("to_date"),
-                                    DATE_FORMAT)
+        from_date = filters.pop("from_date")                 
+        to_date = filters.pop("to_date")                   
         data = filter(
             lambda expense: self._filter_expense(expense,
                                                  from_date,
@@ -110,6 +108,18 @@ class DataHandler:
         """
         return self.expenses
     
+    def get_total_price(self, expenses: list) -> float:
+        """
+        Loops through the expenses and sum the
+        overall price and return it.
+        --------------------------------------
+        -> Params
+            expenses: list
+        <- Return
+            float
+        """
+        return sum(expense["overall_price"] for expense in expenses)
+
     def add_expense(self, expense: dict) -> None:
         """
         Add expense to the current expenses and
@@ -119,4 +129,4 @@ class DataHandler:
             expense: dict
         """
         self.expenses.append(expense)
-        write_json(self.data_path, expense)
+        write_json(self.data_path, self.expenses)

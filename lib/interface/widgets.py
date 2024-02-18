@@ -2117,8 +2117,6 @@ class HorizontalTable(Table):
         """
         self.clear_value()
         self.horizontalHeader().show()
-        if not isinstance(data[0], dict):
-            data = self.convert_before_insert(data)
         self.setup_view(h_headers=headers,
                         row_count=len(data),
                         column_count=len(headers),
@@ -3005,6 +3003,7 @@ class DateEntry(Frame):
             self.setFixedWidth(frame_width)
         self.label = Label(label=label)
         self.date_entry = QDateEdit(calendarPopup=calendarPopup)
+        self.date_entry.setDisplayFormat("dd/MM/yyyy")
         self.date_entry.setMinimumWidth(width)
         self.date_entry.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.date_entry.setAlignment(Qt.AlignCenter)
@@ -3017,13 +3016,12 @@ class DateEntry(Frame):
             effect.setBlurRadius(effect_blur_radius)
             self.date_entry.setGraphicsEffect(effect)
         
-
-    def get_value(self) -> str:
+    def get_value(self) -> datetime:
         """
-        Returns the date entry value.
+        Returns the date entry value as datetime
+        object.
         """
-        value = self.date_entry.date().getDate()
-        return datetime(*value).strftime("%Y-%m-%d")
+        return datetime(*self.date_entry.date().getDate())
     
 class Stretch(QWidget):
 
