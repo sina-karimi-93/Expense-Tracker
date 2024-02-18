@@ -2,6 +2,7 @@
 from datetime import datetime
 from typing import Callable
 from lib.errors import DataValidationFailed
+from lib.data_handler import DataHandler
 from .widgets import Frame
 from .widgets import Vertical
 from .widgets import Horizontal
@@ -166,14 +167,15 @@ class MainFrame(Frame):
     Main Frame of the app that contains
     other frames and widgets
     """
-    def __init__(self) -> None:
+    def __init__(self,
+                 data_handler: DataHandler) -> None:
         super().__init__(layout=Horizontal)
-        self.test_data = load_json("./test_data.json") or list()
+        self.data_handler = data_handler("./test_data.json")
         self.setContentsMargins(5,5,5,5)
         self.add_expense_frame = AddExpenseFrame(add_expense_callback=self.add_expense_callback)
 
         self.add_stretch()
-        self.iii = IllustrationFrame(self.test_data)
+        self.iii = IllustrationFrame(self.data_handler)
 
     def add_expense_callback(self) -> None:
         """
@@ -184,8 +186,7 @@ class MainFrame(Frame):
         try:
             self.add_expense_frame.validate_widgets()
             values = self.add_expense_frame.get_values()
-            self.test_data.append(values)
-            write_json("./test_data.json", self.test_data)
+            self.data_handler.add_expense(values)
         except DataValidationFailed as error:
             print(error)
     

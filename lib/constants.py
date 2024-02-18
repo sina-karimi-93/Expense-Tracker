@@ -3,6 +3,8 @@ from os import getcwd
 
 CWD = getcwd()
 
+DATE_FORMAT = "%Y-%m-%d"
+
 CSS_COLORS_FILE_PATH = f"{CWD}/lib/css/colors.css"
 CSS_FILE_PATH = f"{CWD}/lib/css/style.css"
 
