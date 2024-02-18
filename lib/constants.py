@@ -8,6 +8,7 @@ TABLE_HEADERS = ["Title", "Price", "Quantity",
                 "Overall Price", "Categoty",
                 "Date"]
 
+CONFIGS_FILE_PATH = f"{CWD}/lib/configs/config.json"
 EXPENSES_FILE_PATH = f"{CWD}/lib/data/data.json"
 CSS_COLORS_FILE_PATH = f"{CWD}/lib/css/colors.css"
 CSS_FILE_PATH = f"{CWD}/lib/css/style.css"

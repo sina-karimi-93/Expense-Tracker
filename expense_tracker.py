@@ -36,7 +36,9 @@ class MainWindow(QMainWindow):
         Setup window title, size and icon.
         """
         self.setWindowTitle("Expense Tracker")
-        self.setGeometry(500, 300, 1300, 700)
+        self.setGeometry(500, 300, 1550, 700)
+        self.setFixedWidth(1600)
+        self.setMinimumHeight(700)
         self.setStyleSheet(self.theme)
 
 def run_app() -> None:

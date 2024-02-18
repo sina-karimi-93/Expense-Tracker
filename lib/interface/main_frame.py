@@ -5,6 +5,7 @@ from lib.constants import TABLE_HEADERS
 from lib.constants import DATE_FORMAT
 from lib.constants import DOLLAR_ICON_PATH
 from lib.constants import ITEMS_ICON_PATH
+from lib.constants import CONFIGS_FILE_PATH
 from lib.constants import EXPENSES_FILE_PATH
 from lib.errors import DataValidationFailed
 from lib.data_handler import DataHandler
@@ -35,7 +36,7 @@ class AddExpenseFrame(Frame):
         """
         Setup frame size, color and
         """
-        self.setMinimumWidth(250)
+        self.setMinimumWidth(305)
         self.setMaximumWidth(400)
         effect = QGraphicsDropShadowEffect(self)
         effect.setOffset(0, 0)
@@ -190,7 +191,6 @@ class IllustrationSummaryFrame(Frame):
         self.total_price.change_text(f"TOTAL PRICE {total_price}")
         self.total_items.change_text(f"TOTAL ITEMS {total_items}")
         
-
 class IllustrationFrame(Frame):
     """
     This frame is for showing the inserted
@@ -250,6 +250,45 @@ class IllustrationFrame(Frame):
         total_items = len(expenses)
         self.illustration_summary.update_summary(total_price, total_items)
 
+class ToolsFrame(Frame):
+
+    def __init__(self, data_handler: DataHandler):
+        super().__init__(layout=Vertical)
+        self.setObjectName("tools-frame")
+        self.setup_frame()
+        self.init_widgets()
+
+    def setup_frame(self) -> None:
+        """
+        Setup frame size, color and
+        """
+        self.setMinimumWidth(305)
+        self.setMaximumWidth(400)
+        effect = QGraphicsDropShadowEffect(self)
+        effect.setOffset(0, 0)
+        effect.setColor(QColor("#434b4e"))
+        effect.setBlurRadius(20)
+        self.setGraphicsEffect(effect)
+    
+    def init_widgets(self) -> None:
+        """
+        Initializes the widgets.
+        """
+        self.default_from_date = DateEntry(label="DEFAULT FROM DATE",
+                                   default_date=datetime.now(),
+                                   width=250,
+                                   callback_func=print)
+        self.add_stretch()
+        self.export_excel_button = Button(label="EXPORT EXCEL",
+                                          object_name="add-expense",
+                                          callback_function=print,
+                                          width=270)
+        
+        self.export_csv_button = Button(label="EXPORT CSV",
+                                          object_name="add-expense",
+                                          callback_function=print,
+                                          width=270)
+
 class MainFrame(Frame):
     """
     Main Frame of the app that contains
@@ -262,8 +301,9 @@ class MainFrame(Frame):
         self.setContentsMargins(5,5,5,5)
         self.add_expense_frame = AddExpenseFrame(add_expense_callback=self.add_expense_callback)
 
-        self.add_stretch()
         self.illustration_frame = IllustrationFrame(self.data_handler)
+        self.tools_frame = ToolsFrame(self.data_handler)
+        self.add_stretch()
 
     def add_expense_callback(self) -> None:
         """

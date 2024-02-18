@@ -18,6 +18,11 @@ QFrame#illustration-frame {
     margin-left: 5px;
 }
 
+QFrame#tools-frame {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
 
 QLabel {
     color: white;
@@ -74,6 +79,7 @@ QPushButton:hover {
 QPushButton#add-expense {
     margin-bottom: 10px;
 }
+
 
 
 
