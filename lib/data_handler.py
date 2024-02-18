@@ -2,7 +2,6 @@
 from datetime import datetime
 from .interface.utils import load_json
 from .interface.utils import write_json
-from .constants import DATE_FORMAT
 
 class DataHandler:
     """
