@@ -2092,6 +2092,7 @@ class HorizontalTable(Table):
                 data
                 row: row number default is 0
         """
+        data[-1] = datetime.strftime(data[-1], DATE_FORMAT)
         c_count = self.columnCount()
         for value, column in zip(data, range(c_count)):
             if width:

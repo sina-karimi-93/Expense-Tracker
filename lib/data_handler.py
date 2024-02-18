@@ -20,29 +20,27 @@ class DataHandler:
                 json file that contains the epenses
         """
         self.data_path = data_path
-        self.expenses = self._load_expenses(data_path)
+        self.expenses = self.load_expenses(self.data_path)
     
-    def _load_expenses(self, path: str) -> list:
+    def load_expenses(self, data_path: str) -> list:
         """
-        Open the expenses file and load the
-        data.
-        ---------------------------------------
+        Load data from the json file
+        ---------------------------------
         -> Params
-            path: str
-                expenses file path
+            data_path: str
         <- Return
             list of dicts
         """
         try:
-            data = load_json(path)
+            data = load_json(data_path)
             return data
         except FileNotFoundError:
             return list()
     
     def _filter_dates(self,
-                     expense: dict,
-                     from_date: str,
-                     to_date: str) -> bool:
+                     expense_date: datetime,
+                     from_date: datetime,
+                     to_date: datetime) -> bool:
         """
         Checks whether the expense is in the
         desired timeframe or not.
@@ -54,7 +52,6 @@ class DataHandler:
         <- Return
             bool
         """
-        expense_date = datetime.strptime(expense["date"], DATE_FORMAT)
         if from_date <= expense_date <= to_date:
             return True
         return False
@@ -76,10 +73,10 @@ class DataHandler:
         <- Return
             bool
         """
-        if not self._filter_dates(expense, from_date, to_date):
+        if not self._filter_dates(expense["date"], from_date, to_date):
             return False
         for filter_name, value in filters.items():
-            if expense[filter_name].lower() != value.lower():
+            if not expense[filter_name].lower().startswith(value.lower()):
                 return False
         return True
 
@@ -129,4 +126,7 @@ class DataHandler:
             expense: dict
         """
         self.expenses.append(expense)
+        self.expenses = sorted(self.expenses,
+                               key=lambda expense: expense["date"])
+        self.expenses.reverse()
         write_json(self.data_path, self.expenses)

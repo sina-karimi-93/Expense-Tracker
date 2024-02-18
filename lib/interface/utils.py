@@ -1,24 +1,19 @@
 """
 This module contains function and classes
-for logging, opening files, sharing state
-and ...
+for logging, opening files and ...
 """
 import re
-import csv
-from json import dumps
-from json import load
+from bson.json_util import loads
+from bson.json_util import dumps
 from time import strftime
-from os import system
 from pprint import pprint
 from typing import Any
-from typing import Generator
 from traceback import print_tb
 from ..errors import InvalidLogLevel
 
 
 def void_function(*args, **kwargs) -> None:
     pass
-
 
 class Logger:
     """
@@ -167,15 +162,6 @@ log.disable_log_level(2)
 log.disable_log_level(3)
 
 
-class Notification:
-    """
-    Handles showing the notifications in the app with
-    two tools, namely StatusBar and NotificationBox(floating)
-    """
-    @classmethod
-    def add_messenger(cls, messenger: callable, name: str) -> None:
-        setattr(cls, name, messenger)
-
 def load_file(path: str, mode: str = "r") -> any:
     """
     open and return content of the file
@@ -235,7 +221,7 @@ def load_json(path: str) -> any:
     Open json file and return it as dict
     """
     with open(path, "r") as file:
-        data = load(file)
+        data = loads(file.read())
     return data
 
 def write_json(path: str, data: dict) -> None:
@@ -245,20 +231,3 @@ def write_json(path: str, data: dict) -> None:
     data = dumps(data, indent=4)
     with open(path, 'w') as file:
         file.write(data)
-
-def read_csv(path: str) -> Generator:
-    """
-    Open csv file and read it
-    """
-    data = None
-    with open(path, 'r', encoding='UTF8') as file:
-        data = csv.reader(file)
-        yield from data
-
-def force_close_app(app_name: str) -> None:
-    """
-    Use windows command line to close the app
-    even some of background processings like
-    updating are running.
-    """
-    system(f"TASKKILL /IM {app_name}.exe")

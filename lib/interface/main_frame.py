@@ -319,7 +319,6 @@ class MainFrame(Frame):
         try:
             self.add_expense_frame.validate_widgets()
             values = self.add_expense_frame.get_values()
-            values["date"] = values["date"].strftime(DATE_FORMAT)
             self.data_handler.add_expense(values)
             self.illustration_frame.illustration_filters_callback()
         except DataValidationFailed as error:
