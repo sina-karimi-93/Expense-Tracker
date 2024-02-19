@@ -23,10 +23,35 @@ QFrame#tools-frame {
     margin-left: 5px;
 }
 
+QFrame#detail-frame {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+QFrame#expense-card {
+    border-radius: 35px;
+    background-color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+    border: 3px solid --color5;
+}
 
 QLabel {
     color: white;
     font-weight: 1000;
+}
+
+QLabel#expense-card-label {
+    font-size: 14px;
+    color: --color1;
+    background-color: transparent;
+}
+
+QLabel#expense-detail-date {
+    font-size: 16px;
+    color: --color5;
 }
 
 QLineEdit {
@@ -79,6 +104,16 @@ QPushButton:hover {
 QPushButton#add-expense {
     margin-bottom: 10px;
 }
+
+QPushButton#overall-detail {
+    color: white;
+    background-color: transparent;
+}
+
+QPushButton#overall-detail:hover {
+    color: --color5;
+}
+
 
 
 

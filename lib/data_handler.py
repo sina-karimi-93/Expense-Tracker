@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from collections import defaultdict
 from .interface.utils import load_json
 from .interface.utils import write_json
 
@@ -116,6 +117,22 @@ class DataHandler:
         """
         return sum(expense["overall_price"] for expense in expenses)
 
+    def group_expenses_by_date(self,
+                               expenses: list) -> dict:
+        """
+        Create new data strcture to group expenses
+        based on day.
+        ------------------------------------------
+        -> Params
+            expenses: list
+        <- Return
+            dict
+        """
+        grouped = defaultdict(list)
+        for expense in expenses:
+            grouped[expense["date"]].append(expense)
+        return grouped
+    
     def add_expense(self, expense: dict) -> None:
         """
         Add expense to the current expenses and
