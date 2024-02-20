@@ -93,6 +93,7 @@ QPushButton {
     padding-bottom: 6px;
     border-radius: 13px;
     outline: none;
+    min-width: 50px;
 }
 
 QPushButton:hover {

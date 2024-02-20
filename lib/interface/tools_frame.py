@@ -1,4 +1,8 @@
-
+"""
+This module has a class to change app
+setting and export expenses in excel
+and csv.
+"""
 from typing import Callable
 from datetime import datetime
 from .widgets import Frame
@@ -14,6 +18,7 @@ class ToolsFrame(Frame):
 
     def __init__(self,
                  illustration_count: int,
+                 default_date: datetime,
                  update_configs: Callable,
                  export_excel: Callable,
                  export_csv: Callable):
@@ -21,6 +26,7 @@ class ToolsFrame(Frame):
         self.setObjectName("tools-frame")
         self.setup_frame()
         self.init_widgets(illustration_count,
+                          default_date,
                           update_configs,
                           export_excel,
                           export_csv)
@@ -39,20 +45,21 @@ class ToolsFrame(Frame):
     
     def init_widgets(self,
                      illustration_count: int,
+                     default_date: datetime,
                      update_configs: Callable,
                      export_excel: Callable,
                      export_csv: Callable) -> None:
         """
         Initializes the widgets.
         """
-        self.illustration_count = LabelEntry(label="ITEMS ILLUSTRATION COUNT",
+        self.illustration_count = LabelEntry(label="ILLUSTRATION COUNT",
                                             default_value=illustration_count,
                                             validator="int",
                                             value_limit=(0, 1000),
                                             object_name="entry")
         self.default_from_date = DateEntry(label="DEFAULT FROM DATE",
-                                   default_date=datetime(2023,1,1),
-                                   width=250)
+                                           default_date=default_date,
+                                           width=250)
         self.add_stretch()
         self.save_settings_button = Button(label="SAVE SETTINGS",
                                            object_name="add-expense",

@@ -1,4 +1,6 @@
 
+
+from datetime import datetime
 from .utils import load_json
 from .utils import write_json
 from lib.constants import EXPENSES_FILE_PATH
@@ -7,6 +9,7 @@ from lib.errors import DataValidationFailed
 from lib.data_handler import DataHandler
 from .widgets import Frame
 from .widgets import Horizontal
+from .widgets import MessageBox
 from .add_expense_frame import AddExpenseFrame
 from .illustration_frame import IllustrationFrame
 from .tools_frame import ToolsFrame
@@ -22,7 +25,7 @@ class MainFrame(Frame):
                  data_handler: DataHandler) -> None:
         super().__init__(layout=Horizontal)
         self.setContentsMargins(5, 5, 5, 5)
-        
+
         self.configs = self.load_configs()
         self.data_handler = data_handler(EXPENSES_FILE_PATH,
                                         self.configs.get("illustration_count", 100))
@@ -33,7 +36,10 @@ class MainFrame(Frame):
                                                     self.configs)
         
         illustration_count = self.configs.get("illustration_count", 100)
+        default_date = self.configs.get("default_from_date",
+                                        datetime(year=2023, month=1, day=1))
         self.tools_frame = ToolsFrame(illustration_count,
+                                      default_date,
                                       self.update_configs,
                                       self.export_excel,
                                       self.export_csv)
@@ -62,6 +68,11 @@ class MainFrame(Frame):
             self.illustration_frame.illustration_filters_callback()
         except DataValidationFailed as error:
             log(error, error=error, level=2, color="red")
+            error = str(error).replace("_", " ")
+            MessageBox(self,
+                       "high",
+                       title="Error",
+                       message=error)
     
     def update_configs(self) -> None:
         """
@@ -75,6 +86,11 @@ class MainFrame(Frame):
             write_json(CONFIGS_FILE_PATH, self.configs)
         except DataValidationFailed as error:
             log(error, error=error, level=2, color="red")
+            error = str(error).replace("_", " ")
+            MessageBox(self,
+                       "high",
+                       title="Error",
+                       message=error)
     
     def export_excel(self) -> None:
         """
