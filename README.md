@@ -1,7 +1,8 @@
 # Expense Tracker
 A Desktop application to save the daily expenses and assess them.
 In this project I used Python PYQT5 to create the GUI and use win32com
-to save the expenses as Excel file.\n
+to save the expenses as Excel file.
+</br>
 User can see his/her expenses in two modes, one in a table all together
 and another is by day.
 
