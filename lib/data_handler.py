@@ -12,7 +12,8 @@ class DataHandler:
     given criteria.
     """
     def __init__(self,
-                 data_path: str) -> None:
+                 data_path: str,
+                 expenses_count: int) -> None:
         """
         ---------------------------------
         -> Params
@@ -20,6 +21,7 @@ class DataHandler:
                 json file that contains the epenses
         """
         self.data_path = data_path
+        self.expenses_count = expenses_count
         self.expenses = self.load_expenses(self.data_path)
     
     def load_expenses(self, data_path: str) -> list:
@@ -33,7 +35,7 @@ class DataHandler:
         """
         try:
             data = load_json(data_path)
-            return data
+            return data[:self.expenses_count]
         except FileNotFoundError:
             return list()
     

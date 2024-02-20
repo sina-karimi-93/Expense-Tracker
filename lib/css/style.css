@@ -31,7 +31,7 @@ QFrame#detail-frame {
 }
 
 QFrame#expense-card {
-    border-radius: 35px;
+    border-radius: 25px;
     background-color: white;
     margin-right: 5px;
     margin-left: 5px;
