@@ -1,4 +1,8 @@
 """
+DESIGN AND DEVELOPED IN 2024
+DEVELOPER: SINA KARIMI ALIABAD
+
+-------------------------------------
 Main module of the program that shows
 the GUI.
 """
@@ -9,6 +13,8 @@ from lib import MainFrame
 from lib import load_css
 from lib import CSS_FILE_PATH
 from lib import CSS_COLORS_FILE_PATH
+from lib import DOLLAR_ICON_PATH
+from lib import QIcon
 
 class MainWindow(QMainWindow):
     """
@@ -37,6 +43,7 @@ class MainWindow(QMainWindow):
         """
         self.setWindowTitle("Expense Tracker")
         self.setGeometry(500, 300, 1550, 700)
+        self.setWindowIcon(QIcon(DOLLAR_ICON_PATH))
         self.setFixedWidth(1600)
         self.setMinimumHeight(700)
         self.setStyleSheet(self.theme)
