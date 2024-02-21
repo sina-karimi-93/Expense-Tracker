@@ -1,19 +1,24 @@
 
 
 from datetime import datetime
-from .utils import load_json
-from .utils import write_json
-from lib.constants import EXPENSES_FILE_PATH
-from lib.constants import CONFIGS_FILE_PATH
-from lib.errors import DataValidationFailed
-from lib.data_handler import DataHandler
 from .widgets import Frame
 from .widgets import Horizontal
 from .widgets import MessageBox
+from .widgets import QFileDialog
+from .utils import load_json
+from .utils import write_json
+from .utils import write_csv
+from .utils import log
 from .add_expense_frame import AddExpenseFrame
 from .illustration_frame import IllustrationFrame
 from .tools_frame import ToolsFrame
-from .utils import log
+from lib.constants import EXPENSES_FILE_PATH
+from lib.constants import CONFIGS_FILE_PATH
+from lib.constants import DATE_FORMAT
+from lib.constants import TABLE_HEADERS
+from lib.errors import DataValidationFailed
+from lib.data_handler import DataHandler
+from lib.tools.excel_handler import ExcelHandler
 
 
 class MainFrame(Frame):
@@ -97,9 +102,16 @@ class MainFrame(Frame):
         Export the current filtered expenses to
         the excel file.
         """
+        handler = ExcelHandler()
 
     def export_csv(self) -> None:
         """
-        Export the current filtered expenses to
-        the csv file.
+        Export the expenses to a csv file.
         """
+        directory = QFileDialog.getExistingDirectory()
+        if not directory:
+            return
+        expenses = list(self.data_handler.get_all_as_table())
+        file_name = f"{datetime.now().strftime(DATE_FORMAT)}.csv"
+        path = f"{directory}/{file_name}"
+        write_csv(path=path, data=expenses)

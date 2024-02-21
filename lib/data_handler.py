@@ -1,8 +1,11 @@
 
+
+from typing import Generator
 from datetime import datetime
 from collections import defaultdict
 from .interface.utils import load_json
 from .interface.utils import write_json
+from .constants import TABLE_HEADERS
 
 class DataHandler:
     """
@@ -148,3 +151,13 @@ class DataHandler:
                                key=lambda expense: expense["date"])
         self.expenses.reverse()
         write_json(self.data_path, self.expenses)
+    
+    def get_all_as_table(self) -> Generator:
+        """
+        Convert the expenses from list of dicts
+        to list of tuples(values) for saving
+        in csv and excel or sql.
+        """
+        yield TABLE_HEADERS
+        for expense in self.expenses:
+            yield tuple(expense.values())

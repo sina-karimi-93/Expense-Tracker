@@ -3,6 +3,7 @@ This module contains function and classes
 for logging, opening files and ...
 """
 import re
+import csv
 from bson.json_util import loads
 from bson.json_util import dumps
 from time import strftime
@@ -231,3 +232,19 @@ def write_json(path: str, data: dict) -> None:
     data = dumps(data, indent=4)
     with open(path, 'w') as file:
         file.write(data)
+
+
+def write_csv(path: str,
+              data: list) -> None:
+    """
+    Write data into a csv file.
+    ----------------------------------
+    -> Params
+        path: str
+                csv file path
+        data: list of tuples
+    """
+    with open(path, "w", newline='') as file:
+        writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
+        writer.writerows(data)
+        

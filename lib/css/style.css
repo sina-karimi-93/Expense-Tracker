@@ -1,5 +1,5 @@
 QWidget {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: --color1;
     font-size: 12px;
 }
