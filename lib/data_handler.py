@@ -163,5 +163,4 @@ class DataHandler:
         for expense in self.expenses:
             row = list(expense.values())
             row[-1] = row[-1].strftime(DATE_FORMAT)
-            print(row)
             yield row

@@ -65,10 +65,10 @@ class ToolsFrame(Frame):
                                            object_name="add-expense",
                                            callback_function=update_configs,
                                            width=270)
-        self.export_excel_button = Button(label="EXPORT EXCEL",
-                                          object_name="add-expense",
-                                          callback_function=export_excel,
-                                          width=270)
+        # self.export_excel_button = Button(label="EXPORT EXCEL",
+        #                                   object_name="add-expense",
+        #                                   callback_function=export_excel,
+        #                                   width=270)
         
         self.export_csv_button = Button(label="EXPORT CSV",
                                           object_name="add-expense",
