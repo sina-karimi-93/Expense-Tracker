@@ -1,15 +1,10 @@
 """
 Module contains all the widgets class to create UI with Qt library
 """
-import re
-import csv
 from datetime import datetime
-from itertools import chain
 from typing import Any
 from typing import Union
 from typing import NewType
-from PyQt5 import QtCore
-from PyQt5 import QtGui
 from PyQt5.QtWidgets import QAbstractSpinBox
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QAction
@@ -17,22 +12,14 @@ from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QAbstractItemView
-from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QRadioButton
-from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtWidgets import QTextEdit
-from PyQt5.QtWidgets import QToolBar
-from PyQt5.QtWidgets import QBoxLayout
 from PyQt5.QtWidgets import QVBoxLayout as Vertical
 from PyQt5.QtWidgets import QHBoxLayout as Horizontal
-from PyQt5.QtWidgets import QGridLayout as Grid
-from PyQt5.QtWidgets import QStackedLayout as StackedLayout
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QScrollArea
 from PyQt5.QtWidgets import QGroupBox
@@ -40,62 +27,27 @@ from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtWidgets import QFrame
 from PyQt5.QtWidgets import QListWidget
-from PyQt5.QtWidgets import QListView
-from PyQt5.QtWidgets import QListWidgetItem
-from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QCompleter
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QGraphicsOpacityEffect
-from PyQt5.QtWidgets import QGraphicsColorizeEffect
-from PyQt5.QtWidgets import QGraphicsBlurEffect
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
-from PyQt5.QtWidgets import QProgressBar
-from PyQt5.QtWidgets import QTabWidget
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QDateEdit
-
 from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import QIconEngine
-from PyQt5.QtGui import QClipboard
 from PyQt5.QtGui import QCursor
-from PyQt5.QtGui import QPalette
 from PyQt5.QtGui import QColor
-from PyQt5.QtGui import QBrush
-from PyQt5.QtGui import QFocusEvent
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtGui import QValidator
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtGui import QImage
-from PyQt5.QtGui import QDrag
-
-from PyQt5.QtCore import QObject
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtCore import QPropertyAnimation
-from PyQt5.QtCore import QEasingCurve
-from PyQt5.QtCore import QParallelAnimationGroup
-from PyQt5.QtCore import QPoint
-from PyQt5.QtCore import QRect
-from PyQt5.QtCore import QModelIndex
-from PyQt5.QtCore import QEvent
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QSize
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtCore import QSortFilterProxyModel
-from PyQt5.QtCore import QDir
-from PyQt5.QtCore import QUrl
-from PyQt5.QtCore import QMimeData
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtMultimedia import QMediaContent
-from PyQt5.QtMultimedia import QMediaPlayer
 from lib.errors import DataValidationFailed, RowNotExists, TableCellNotFoundError
 from .utils import log
 from .utils import void_function
 from lib.constants import *
 
 CSS = NewType("CSS", str)
-
 
 def change_widget_status(widget: object, status: str = "normal") -> None:
     """
@@ -108,7 +60,6 @@ def change_widget_status(widget: object, status: str = "normal") -> None:
         "error": "#ff0048",
     }
     widget.setStyleSheet(f"border-color:{states[status]};")
-
 
 class MessageBox(QMessageBox):
     """
@@ -144,7 +95,6 @@ class MessageBox(QMessageBox):
             return True
         return False
 
-
 class IntValidator(QIntValidator):
 
     def validate(self, a0: str, a1: int):
@@ -164,7 +114,6 @@ class IntValidator(QIntValidator):
             return res
         return res
 
-
 class DoubleValidator(QDoubleValidator):
 
     def validate(self, a0: str, a1: int):
@@ -183,7 +132,6 @@ class DoubleValidator(QDoubleValidator):
             return res
         return res
 
-
 class RegxpValidator(QRegExpValidator):
     """
     Sub class of QRegExpValidator, it will validate
@@ -196,7 +144,6 @@ class RegxpValidator(QRegExpValidator):
 
     def __init__(self, pattern: str) -> None:
         super().__init__(QRegExp(pattern))
-
 
 class WidgetController:
     """
@@ -404,7 +351,6 @@ class WidgetController:
                     level=2, 
                     color="red")
 
-
 class Frame(QFrame, WidgetController):
     """
     Custom Frame class (Qwidget)
@@ -417,189 +363,6 @@ class Frame(QFrame, WidgetController):
 
         self.adjustSize()
         self.setLayout(self.main_layout)
-
-
-class BaseFrame(QFrame, WidgetController):
-    """
-    this class is used when we have subframe
-    or frame contain other frame, the only diffrent
-    with normal Frame class is __setattr__ automatically
-    add all the subframe widgets to the widget list to
-    make it easier get all the widges values
-    """
-
-    def __init__(self, layout: object, **kwrags):
-        super().__init__(**kwrags)
-        self.main_layout = layout()
-        self.adjustSize()
-        self.setLayout(self.main_layout)
-
-    def __setattr__(self, name: str, widget: object) -> None:
-        """
-        Overrided __setattr__, widgets gonna be subframes.
-        its adding all subframe widgets to the BaseFrame
-        widgets list
-        """
-        super().__setattr__(name, widget)
-        try:
-            self.sub_frame = widget.get_widgets()
-            self.widgets = list(chain(self.widgets, self.sub_frame))
-        except AttributeError as error:
-            log(error=error,
-                level=3, 
-                color="red")
-
-    def get_values(self) -> dict:
-        """
-        Returns Value of the widgets, driver subframe
-        and common widget subframe
-        """
-        values = dict()
-        # update the widgets list if any change has been made
-        self.widgets = list(chain(self.widgets, self.sub_frame))
-        for name, widgets in self.widgets:
-            try:
-                values[name] = widgets.get_value()
-            except AttributeError as error:
-                log(error=error,
-                    level=2, 
-                    color="red")
-
-            except RuntimeError as error:
-                log(error=error,
-                    level=2, 
-                    color="red")
-
-        return values
-
-
-class Dragable:
-    """
-    Decorator class for adding drag/drop feature
-    to the decorated Frame classes.
-
-    Adds mouseMoveEvent method to the decorated class.
-    """
-
-    def __call__(self, widget: QWidget) -> QWidget:
-        setattr(widget, "mouseMoveEvent",
-                lambda x, y: self.mouseMoveEvent(x, y))
-        return widget
-
-    @staticmethod
-    def mouseMoveEvent(widget, event):
-        """
-        Implementing this method to allow the widget
-        has drag and drop feature.
-        """
-        if event.buttons() == Qt.LeftButton:
-            drag = QDrag(widget)
-            mime = QMimeData()
-            drag.setMimeData(mime)
-
-            pixmap = QPixmap(widget.size())
-            widget.render(pixmap)
-            drag.setPixmap(pixmap)
-
-            drag.exec_(Qt.MoveAction)
-
-
-class HoverBorder:
-    """
-    Decorator class for adding two events to the
-    widget classes, namely enterEvent and leaveEvent to
-    chand the border color when mouse enters and leaves
-    the widgets.
-    Using staticmethod on enterEvent and leaveEvent methods
-    is for we do not need the instance of this class, we just
-    want to assign this methods to the new class.
-    """
-
-    def __init__(self,
-                 enter_color: str = "#F1B300",
-                 leave_color: str = "#153b4d") -> None:
-        self.enter_color = enter_color
-        self.leave_color = leave_color
-
-    def __call__(self, widget: QWidget) -> QWidget:
-        setattr(widget, "enterEvent",
-                lambda x, y: self.enterEvent(x, self.enter_color, y))
-        setattr(widget, "leaveEvent",
-                lambda x, y: self.leaveEvent(x, self.leave_color, y))
-        return widget
-
-    @staticmethod
-    def enterEvent(widget: QWidget, color: str, event):
-        """
-        Override this method to change border color
-        when mouse enter.
-        --------------------------------------------
-        -> Params
-            event: An event which came from PyQt to this method
-                   when mouse enters.
-        """
-        object_name = widget.objectName()
-        widget.setStyleSheet(f"""QGroupBox#{object_name} {{
-                border-color: {color};
-            }}""")
-
-    @staticmethod
-    def leaveEvent(widget: QWidget, color: str, event) -> None:
-        """
-        Override this method to change border color
-        when mouse leave.
-        --------------------------------------------
-        -> Params
-            event: An event which came from PyQt to this method
-                   when mouse leaves.
-        """
-        object_name = widget.objectName()
-        widget.setStyleSheet(f"""QGroupBox#{object_name} {{
-                border-color: {color};
-            }}""")
-
-    def mouseMoveEvent(self, e):
-
-        if e.buttons() == Qt.LeftButton:
-            drag = QDrag(self)
-            mime = QMimeData()
-            drag.setMimeData(mime)
-
-            pixmap = QPixmap(self.size())
-            self.render(pixmap)
-            drag.setPixmap(pixmap)
-
-            drag.exec_(Qt.MoveAction)
-
-
-class TopLevelWindow(QDialog, WidgetController):
-    """
-    Top level window sub class of QDialog class
-    """
-
-    def __init__(self,
-                 layout: object,
-                 theme: str = None,
-                 **kwargs) -> None:
-        super().__init__()
-        self.main_layout = layout()
-        self.setStyleSheet(theme)
-        self.setLayout(self.main_layout)
-        window_flags = self.windowFlags() ^ Qt.WindowContextHelpButtonHint
-        self.setWindowFlags(window_flags)
-
-    def show_window(self) -> None:
-        """
-        display commment frame as top window
-        """
-        self.exec_()
-
-    def change_theme(self, theme: CSS) -> None:
-        """
-        Change theme of the top level window
-        """
-        self.setStyleSheet(theme)
-
 
 class LabelFrame(QGroupBox, WidgetController):
     """
@@ -640,61 +403,6 @@ class LabelFrame(QGroupBox, WidgetController):
             value:str
         """
         self.setTitle(value)
-
-
-class TopLevel(QDialog):
-    """
-    Top level window class can be use as popup window.
-    """
-
-    def __init__(self, parent: object = None) -> None:
-        super().__init__(parent=parent)
-        window_flags = self.windowFlags() ^ Qt.WindowContextHelpButtonHint
-        self.setWindowFlags(window_flags)
-
-
-class Toolbar(QToolBar):
-    """
-    Customized Subclass of Qtoolbar
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setIconSize(QSize(46, 46))
-
-    def contextMenuEvent(self, event: object) -> None:
-        """
-        override this method to prevent show menu on toolbar
-        by right click.
-        """
-        pass
-
-    def add_button(self,
-                   callback_func: callable,
-                   icon_path: str,
-                   tooltip: str = "",
-                   label: str = "") -> None:
-        """
-        add button to the tool bar
-        -> Params:
-               label: str
-               callback_func
-               icon_path
-               tooltip
-        """
-        button = QAction(QIcon(icon_path), label, self)
-        button.setToolTip(tooltip)
-        button.triggered.connect(callback_func)
-        self.addAction(button)
-        self.setObjectName("ToolBar")
-
-    def add_widget(self, widget: object) -> None:
-        """
-        Adds widget to the toolbar
-        """
-        self.addSeparator()
-        self.addWidget(widget)
-
 
 class Label(QLabel):
     """
@@ -746,7 +454,6 @@ class Label(QLabel):
                              transformMode=Qt.SmoothTransformation)
         self.setPixmap(image)
 
-
 class Button(QPushButton):
     """
     Custom sub class of PushButton
@@ -776,89 +483,6 @@ class Button(QPushButton):
             self.setIcon(QIcon(icon))
             self.setIconSize(QSize(*icon_size))
         self.grid_positions = grid_positions
-
-
-class CheckBox(QCheckBox):
-    """
-    Custom QtCheckbox widget
-    """
-
-    def __init__(self,
-                 label: str,
-                 callback_func: object = void_function,
-                 icon_path: str = None,
-                 icon_size: tuple = (15, 15),
-                 is_checked: bool = False,
-                 object_name: str = None,
-                 grid_positions: tuple = None,
-                 **kwargs) -> None:
-        super().__init__(label, **kwargs)
-        self.setChecked(is_checked)
-        self.stateChanged.connect(callback_func)
-        self.stateChanged.connect(self.on_valid)
-        # self.setCheckState(Qt.Checked)
-        self.setObjectName(object_name)
-        self.setCursor(QCursor(Qt.PointingHandCursor))
-        self.setIcon(QIcon(icon_path))
-        self.setIconSize(QSize(*icon_size))
-        self.grid_positions = grid_positions
-
-    def get_value(self) -> bool:
-        """
-        return state of the check box
-        """
-        return self.isChecked()
-
-    def get_state(self) -> bool:
-        """
-        Return state of the check box
-        """
-        return self.isChecked()
-
-    def change_state(self, state: int = 2) -> None:
-        """
-        Change state of the checkbox
-        -> Params:
-               states: 0 -> unchecked
-                       1 -> partially checked
-                       2 -> checked
-        """
-        self.setCheckState(state)
-        self.setObjectName("valid")
-
-    def on_valid(self) -> None:
-        """
-        change the css object name on when is unchecked
-        """
-        self.setObjectName("valid")
-
-    def on_invalid(self) -> None:
-        """
-        change the css object name on when is unchecked
-        """
-        self.setObjectName("invalid")
-
-
-class ToolbarIconButton(QPushButton):
-    """
-    Customized QPushButton subclass
-    """
-
-    def __init__(
-        self,
-        label: str = None,
-        icon: str = None,
-        callback_function: object = None,
-        status_tip: str = None,
-        **kwargs,
-    ):
-        super().__init__(label, **kwargs)
-        self.clicked.connect(callback_function)
-        self.setStatusTip(status_tip)
-        self.setIcon(QIcon(icon))
-        self.setCursor(QCursor(Qt.PointingHandCursor))
-        # self.setObjectName("test")
-
 
 class DigitValidator:
     """
@@ -893,7 +517,6 @@ class DigitValidator:
 
         self.on_valid()
         return True
-
 
 class Combobox(QComboBox):
     """
@@ -1112,7 +735,6 @@ class Combobox(QComboBox):
         self.on_valid()
         return super().mousePressEvent(event)
 
-
 class StringCombobox(Combobox):
     """
     This class is e Combobox class with string validators
@@ -1148,7 +770,6 @@ class StringCombobox(Combobox):
         self.on_valid()
         return True
 
-
 class DigitCombobox(DigitValidator, Combobox):
     """
     Mixing class of DigitValidator and Combobox
@@ -1161,7 +782,6 @@ class DigitCombobox(DigitValidator, Combobox):
         self._type = value_type
         self.not_zero = kwargs["not_zero"]
 
-
 class IntCombobox(DigitCombobox):
     """
     Int Combobox will validate and return int value type
@@ -1170,7 +790,6 @@ class IntCombobox(DigitCombobox):
     def __init__(self, value_limit: list, **kwargs) -> None:
         super().__init__(value_type=int, **kwargs)
         self.setValidator(IntValidator(value_limit[0], value_limit[1]))
-
 
 class FloatCombobox(DigitCombobox):
     """
@@ -1182,7 +801,6 @@ class FloatCombobox(DigitCombobox):
         self.setValidator(
             DoubleValidator(float(value_limit[0]), float(value_limit[1]), 20,
                             self))
-
 
 class LabelCombobox(Frame):
     """
@@ -1377,7 +995,6 @@ class LabelCombobox(Frame):
         """
         self.combobox.validate = method
 
-
 class Entry(QLineEdit):
     """
     Customized QLineEdit Subclass
@@ -1516,7 +1133,6 @@ class Entry(QLineEdit):
         self.on_valid()
         return super().mousePressEvent(event)
 
-
 class StringEntry(Entry):
     """
     This class is e Entry class with string validators
@@ -1553,7 +1169,6 @@ class StringEntry(Entry):
         self.on_valid()
         return True
 
-
 class DigitEntry(DigitValidator, Entry):
     """
     Mixing class of DigitValidator and Entry widget
@@ -1565,7 +1180,6 @@ class DigitEntry(DigitValidator, Entry):
         self._type = value_type
         self.not_zero = kwargs["not_zero"]
 
-
 class IntEntry(DigitEntry):
     """
     IntEntry will accept and return int value
@@ -1574,7 +1188,6 @@ class IntEntry(DigitEntry):
     def __init__(self, value_limit: tuple, **kwargs) -> None:
         super().__init__(value_type=int, **kwargs)
         self.setValidator(IntValidator(value_limit[0], value_limit[1]))
-
 
 class FloatEntry(DigitEntry):
     """
@@ -1586,7 +1199,6 @@ class FloatEntry(DigitEntry):
         self.setValidator(
             DoubleValidator(float(value_limit[0]), float(value_limit[1]), 20,
                             self))
-
 
 class LabelEntry(Frame):
     """
@@ -1740,103 +1352,6 @@ class LabelEntry(Frame):
         """
         self.entry.disconnect()
 
-
-class RadioButton(QRadioButton):
-    """
-    Custom sub class of RadioButton
-    """
-
-    def __init__(self, label: str, status_tip: str = None, **kwargs):
-        super().__init__(label, **kwargs)
-        self.setStatusTip(status_tip)
-        self.is_widget = True
-
-
-class TextBox(QTextEdit):
-    """
-    Customized QTextEdit Subclass
-    """
-
-    def __init__(self,
-                 text: str = "",
-                 max_length: int = None,
-                 object_name: str = None,
-                 is_readonly: bool = False,
-                 validator: str = None,
-                 width: int = None,
-                 height: int = None,
-                 grid_positions: tuple = None,
-                 **kwargs):
-        super().__init__(**kwargs)
-        # disabled drag and drop
-        # self.setAcceptDrops(False)
-        self.grid_positions = grid_positions
-        self.setObjectName(object_name)
-        self.setPlainText(text)
-        self.setReadOnly(is_readonly)
-        if max_length:
-            self.textChanged.connect(lambda: self.check_length(max_length))
-        if validator:
-            self.textChanged.connect(lambda: self.validate_callback(validator))
-        if height:
-            self.setFixedHeight(height)
-        if width:
-            self.setFixedWidth(width)
-
-    def check_length(self, max_length: int) -> None:
-        """
-        QTextEdit has not method for adding max length, So
-        this method do the max length job and prevent user to
-        type more than max_length value.
-
-        @args
-            max_length:int
-        """
-        text = self.toPlainText()
-        cursor = self.textCursor()
-        if len(text) > max_length:
-            self.setPlainText(text[0:-1])
-            self.setTextCursor(cursor)
-
-    def validate_callback(self, validator: str) -> None:
-        """
-        Validator for checking user input
-        """
-        text = self.toPlainText()
-        try:
-            last_char = text[-1]
-            pattern = VALIDATORS[validator]
-            result = re.findall(pattern, last_char)
-            if not result:
-                cursor = self.textCursor()
-                self.setPlainText(text[0:-1])
-                self.setTextCursor(cursor)
-        except IndexError as error:
-            log(error=error,
-                level=2, 
-                color="red")
-
-    def get_value(self) -> str:
-        """
-        Get textbox value.
-        """
-        return self.toPlainText()
-
-    def add_text(self, text: str) -> None:
-        """
-        Add text to text box
-        -> Params:
-                text
-        """
-        self.setPlainText(text)
-
-    def clear_value(self) -> None:
-        """
-        Remove all the text inside th widget
-        """
-        self.clear()
-
-
 class ScrollArea(QScrollArea):
     """
     Custom QScrollArea
@@ -1872,7 +1387,6 @@ class ScrollArea(QScrollArea):
         """
         return self.child.validate_widgets()
 
-
 class Menu(QMenu):
     """
     This class is subclass of QMenu
@@ -1894,7 +1408,6 @@ class Menu(QMenu):
         action = QAction(QIcon(icon_path), title, self)
         action.triggered.connect(callback_func)
         self.addAction(action)
-
 
 class Table(QTableWidget):
     """
@@ -2030,7 +1543,6 @@ class Table(QTableWidget):
             list of a dict -> [{1:3, 2:"something", 3:55.5, 4:"another_something"}]
         """
         return [{index: i for index, i in enumerate(data)}]
-
 
 class HorizontalTable(Table):
 
@@ -2219,96 +1731,6 @@ class HorizontalTable(Table):
         self.horizontalHeader().hide()
         self.clear()
 
-
-class VerticalTable(Table):
-
-    def __init__(self,
-                 min_width: int = 600,
-                 min_height: int = 200,
-                 editable:bool=False,
-                 selection_mode: object = QTableWidget.SingleSelection) -> None:
-        super().__init__(min_width=min_width,
-                         min_height=min_height,
-                         editable=editable,
-                         selection_mode=selection_mode)
-
-    def setup_view(self,
-                   v_headers: list = None,
-                   row_count: int = 0,
-                   column_count: int = 0,
-                   has_width: list = None) -> None:
-        """
-        Setup table info such as number of rows
-        and columns and cells view type.
-        """
-        self.setColumnCount(column_count)
-        self.setRowCount(row_count)
-        self.setVerticalHeaderLabels(v_headers)
-        self.V_HEADER = tuple(v_headers)
-        self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.horizontalHeader().hide()
-
-        if not has_width:
-            self.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
-    def insert_column(self, data: list, width: Any, column: int = 0) -> None:
-        """
-        Insert the given data into the table when table is in horizontal
-        view.
-        """
-        r_count = self.rowCount()
-        for row in range(r_count):
-            self.setItem(row, column, QTableWidgetItem(str(data[row])))
-            if width:
-                try:
-                    self.setColumnWidth(row, width[row])
-                except TypeError:
-                    self.setColumnWidth(row, width)
-                except IndexError:
-                    self.setColumnWidth(row, width[0])
-
-    def insert_data(self,
-                    data: list,
-                    width: Union[list, int] = None,
-                    is_headless: bool = False) -> None:
-        """
-        Insert data into the table.
-        ----------------------------------------------
-        -> Params
-            data: list of dicts
-            width: list or int
-        """
-        self.clear()
-        self.verticalHeader().show()
-        if not isinstance(data[0], dict):
-            data = self.convert_before_insert(data)
-        v_headers = list(map(lambda x: str(x), data[0].keys()))
-        self.setup_view(v_headers=v_headers,
-                        row_count=len(v_headers),
-                        column_count=len(data),
-                        has_width=width)
-        for column_index, document in enumerate(data):
-            value = list(document.values())
-            self.insert_column(data=value,
-                               width=width,
-                               column=column_index)
-        if is_headless:
-            self.verticalHeader().hide()
-
-    def get_values(self) -> dict:
-        """
-        Collect the data in the table and converts
-        it to a dict and return it.
-        """
-        total_rows = self.rowCount()
-        if total_rows:
-            data = (
-                self._item_getter(i, 0, validate=True) for i in range(total_rows)
-            )
-            return [dict(zip(self.V_HEADER, data))]
-
-
 class ListBox(QListWidget):
     """
     Custom subclass of QList Widget
@@ -2395,594 +1817,6 @@ class ListBox(QListWidget):
             item = self.item(i)
             item.setSelected(False)
 
-
-class TabBook(QTabWidget):
-    """
-    Sub class of QTabWidget.
-    """
-
-    def __init__(self, 
-                 object_name: str = None,
-                 grid_positions: tuple = None, 
-                 **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.setObjectName(object_name)
-        self.grid_positions = grid_positions
-        self.tabBar().setObjectName(object_name)
-        # self.setTabPosition(QTabWidget.West)
-        # self.setDocumentMode(True)
-        # self.setTabShape(QTabWidget.Triangular)
-        # self.setTabsClosable(True)
-        self.setMovable(True)
-        # self.tabCloseRequested.connect(lambda index: self.removeTab(index))
-        # self.setStyleSheet("QTabBar::tab { min-width: 150px; }")
-
-
-class NotificationMessage(Frame):
-
-    status_colors = {
-        "normal": "rgba(0  , 83 , 120, 1)",  # Dark Blue
-        "success": "rgba(2  , 120, 0  , 1)",  # Green
-        "low": "rgba(225, 92 , 0  , 1)",  # Orange
-        "medium": "rgba(76 , 0  , 115, 1)",  # Purple
-        "high": "rgba(200, 0  , 53 , 1)",  # Red
-    }
-
-    def __init__(self, message: str, critical_level: str,
-                 remove_callback: object, **kwargs) -> None:
-        super().__init__(layout=Vertical, **kwargs)
-        self.setObjectName("notification_message")
-        self.frame_height = len(message) / 0.95 if len(message) > 150 else 160
-        self.setFixedHeight(self.frame_height)
-        color = self.status_colors[critical_level]
-        self.setStyleSheet(f"background-color:{color};")
-
-        self.message = TextBox(text=message,
-                               object_name="notification_message",
-                               max_length=500,
-                               is_readonly=True)
-        self.message.setStyleSheet(f"background-color:transparent;")
-
-        self.progress = Label("", object_name="notification_progress")
-        self.progress.setStyleSheet(f"background-color:white;")
-        self.progress.setGeometry(0, 0, 10, 0)
-
-        self.remove_callback = remove_callback
-        self.setup_animations()
-
-    def setup_animations(self) -> None:
-        """
-        Setup Animations for this frame.
-        """
-        self.progress_animation = QPropertyAnimation(
-            targetObject=self.progress,
-            propertyName=b'geometry',
-            startValue=QRect(0, self.frame_height - 40, 0, 10),
-            endValue=QRect(0, self.frame_height - 40, 350, 10),
-            duration=3500)
-
-        self.effect = QGraphicsOpacityEffect(self, opacity=1.0)
-        self.setGraphicsEffect(self.effect)
-        self.opacity_animation = QPropertyAnimation(targetObject=self.effect,
-                                                    propertyName=b'opacity',
-                                                    startValue=1.0,
-                                                    endValue=0.0,
-                                                    duration=3500)
-        self.opacity_animation.setKeyValueAt(0.75, 1)
-
-        self.progress_animation.finished.connect(self.remove_callback)
-        self.progress_animation.start()
-        self.opacity_animation.start()
-
-
-class NotificationFrame(Frame):
-
-    def __init__(self, notificationbox_callback: callable, **kwargs) -> None:
-        super().__init__(layout=Vertical, **kwargs)
-        self.setObjectName("notification")
-        self.notificationbox_callback = notificationbox_callback
-        self.message_count = 0
-
-    def enterEvent(self, a0) -> None:
-        """
-        When mouse enters this frame, it will
-        pause all NotificationMessage animations.
-        It helps user to read the message.
-        """
-        for _, widget in self.widgets:
-            widget.progress_animation.pause()
-            widget.opacity_animation.pause()
-        return super().enterEvent(a0)
-
-    def leaveEvent(self, a0) -> None:
-        """
-        When mouse leave this frame, it will
-        resume all NotificationMessage animations.
-        """
-        for _, widget in self.widgets:
-            widget.progress_animation.resume()
-            widget.opacity_animation.resume()
-        return super().leaveEvent(a0)
-
-    def mousePressEvent(self, a0) -> None:
-        """
-        When user click in this frame, it will
-        remove all notifications.
-        """
-        self.remove_all_widgets()
-        self.notificationbox_callback(True)  # setHidden(True)
-        return super().mousePressEvent(a0)
-
-    def add_message(self, message: str, critical_level: str) -> None:
-        """
-        Adds new Message to Notification Frame.
-
-        -> Params
-            message:str
-            critical_level:str
-        """
-        self.message_count += 1
-        setattr(
-            self, f"message{self.message_count}",
-            NotificationMessage(message=message,
-                                critical_level=critical_level,
-                                remove_callback=self.remove_message))
-
-    def remove_message(self) -> None:
-        """
-        Remove a NotificationMessage and checks if
-        there is no message, then call the NotificationBox
-        callback to set it hidden
-        """
-        self.remove_widget(0)
-        if not self.widgets:
-            self.notificationbox_callback(True)  # setHidden(True)
-
-
-class FloatingNotification(Frame):
-
-    def __init__(self, parent: object, **kwargs) -> None:
-        super().__init__(layout=Vertical, parent=parent, **kwargs)
-        self.setFixedSize(440, 800)
-        self.setObjectName("notification")
-        self.setHidden(True)
-        self.scrollarea = ScrollArea(object_name="notification")
-        self.scrollarea.verticalScrollBar()
-        self.scrollarea.set_widget(NotificationFrame(self.setHidden))
-
-    def show_message(self, message: str, critical_level: str = "high") -> None:
-        """
-        Add new message to NotificationFrame
-        -> Params
-            message:str
-            critical_level:str
-        """
-        self.setHidden(False)
-        notification_frame = self.scrollarea.get_widget()
-        notification_frame.add_message(str(message), critical_level)
-
-
-class NotificationBar(QStatusBar):
-
-    status_colors = {
-        "normal": "#005378",  # Dark Blue
-        "success": "#026100",  # Green
-        "low": "#D35C00",  # Orange
-        "medium": "#4C0073",  # Purple
-        "high": "#D90035",  # Red
-    }
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.message = Label(label="App Message",
-                             object_name="notificationbar")
-        self.addWidget(self.message)
-        self.setup_animations()
-
-    def logger(self, message: str) -> None:
-        """
-        Write errors on a csv file.
-
-        @args
-            message:str
-        """
-        date = datetime.now().strftime("%Y-%m-%d")
-        time = datetime.now().strftime("%H:%M:%S")
-        row = [date, time, message]
-
-        with open("./lib/log/log.csv", "a") as f:
-            csvwriter = csv.writer(f)
-            csvwriter.writerow(row)
-
-    def mousePressEvent(self, event) -> None:
-        """
-        When user clicked on Notificationbar, this method
-        will remove the current message and change the status color
-        to normall.
-        """
-        self._message_out_configs()
-        self.color_animation.setLoopCount(1)
-        self.message_out_position_animation.finished.connect(
-            lambda: self.message.change_text(""))
-
-        self.message_out_position_animation.start()
-        self.color_animation.start()
-        self.color_animation.finished.connect(
-            lambda: self.color_animation.setLoopCount(7))
-
-    def setup_animations(self) -> None:
-        """
-        Add animations to the Notificationbar and message label.
-        """
-        self.current_color = self.status_colors["normal"]
-
-        self.effect = QGraphicsColorizeEffect(self)
-        self.effect.setColor(QColor(self.status_colors["normal"]))
-        self.setGraphicsEffect(self.effect)
-
-        # NEW MESSAGE ANIMATIONS
-        self.message_in_position_animation = QPropertyAnimation(
-            self.message, b"pos")
-        self.message_in_position_animation.setDuration(200)
-
-        self.color_animation = QPropertyAnimation(self.effect, b"color")
-        self.color_animation.setDuration(200)
-        self.color_animation.setLoopCount(5)
-
-        self.in_animations = QParallelAnimationGroup()
-        self.in_animations.addAnimation(self.message_in_position_animation)
-        self.in_animations.addAnimation(self.color_animation)
-
-        # MESSAGE DISAPEAR ANIMATION
-        self.message_out_position_animation = QPropertyAnimation(
-            self.message, b"pos")
-        self.message_out_position_animation.setDuration(100)
-
-    def _message_in_configs(self, critical_level: str) -> None:
-        """
-        Set animations configs when it has to appeare in notifcation bar.
-
-        @args
-            critical_level:str
-        """
-        x = self.message.x()
-        self.message_in_position_animation.setStartValue(QPoint(x, 20))
-        self.message_in_position_animation.setEndValue(QPoint(x, 3))
-
-        start_color = QColor(self.current_color)
-        end_color = QColor(self.status_colors.get(critical_level, "#005378"))
-        self.color_animation.setStartValue(start_color)
-        self.color_animation.setEndValue(end_color)
-
-        self.current_color = end_color
-
-    def _message_out_configs(self) -> None:
-        """
-        Message animation when it has to disapeare.
-        """
-        x = self.message.x()
-        self.message_out_position_animation.setStartValue(QPoint(x, 3))
-        self.message_out_position_animation.setEndValue(QPoint(x, -20))
-
-        start_color = QColor(self.current_color)
-        end_color = QColor(self.status_colors["normal"])
-        self.color_animation.setStartValue(start_color)
-        self.color_animation.setEndValue(end_color)
-        self.current_color = self.status_colors["normal"]
-
-    def _change_message(self, message: str) -> None:
-        """
-        Add now timestamp along with new message to the message label
-
-        @args
-            message:str
-        """
-        # self.logger(message)
-        time = datetime.now().strftime("%H:%M:%S")
-        message = f"{time} → {message}"
-        self.message.change_text(message)
-
-    def _new_message(self, message, critical_level):
-        """
-        Change label message and start animation to show
-        new message with its color.
-
-        @args
-            message:str
-            critical_level:str
-
-        """
-        self._change_message(f"{message}")
-        self._message_in_configs(critical_level)
-        self.message_out_position_animation.disconnect()
-        self.in_animations.start()
-
-    def show_message(self,
-                     message: str,
-                     critical_level: str = "high") -> None:
-        """
-        Show new message and set new color to notification bar based
-        on critical level.
-        """
-        message = str(message)
-        self._message_out_configs()
-        self.message_out_position_animation.finished.connect(
-            lambda: (self.message.change_text(""),
-                     self._new_message(message, critical_level)))
-        self.message_out_position_animation.start()
-
-
-class SideBar(Frame):
-    """
-    Animated Side Bar Frame.
-    """
-
-    def __init__(self, parent: object, **kwargs) -> None:
-        super().__init__(layout=Vertical, parent=parent, **kwargs)
-
-        self.setObjectName('sidebar')
-        self.is_open = False
-        self.setHidden(True)
-        self.setup_animations()
-
-    def setup_animations(self) -> None:
-        """
-        Setup Animations for this frame.
-        """
-        self.animation = QPropertyAnimation(self, b'geometry')
-        self.animation.setDuration(200)
-
-        self.animation2 = QPropertyAnimation(self, b'geometry')
-        self.animation2.setDuration(200)
-
-    def change_coordinates(self,
-                           start: tuple,
-                           end: tuple,
-                           animation_object: QPropertyAnimation) -> None:
-        """
-        Change the animation setting for the start point and end point.
-        it will call start() function after changing the coordinates
-        -----------------------------------------------------------
-        -> Params:
-                start: (x, y, width, height)
-                end: (x, y, width, height)
-                animation_object: QPropertyAnimation
-        """
-        animation_object.setStartValue(QRect(*start))
-        animation_object.setEndValue(QRect(*end))
-        animation_object.start()
-
-    def disconnect_animations(self) -> None:
-        """
-        Disconnect all methods that connected to the
-        animations
-        """
-        self.animation.disconnect()
-        self.animation2.disconnect()
-
-    def _close_sidebar(self,
-                       x: float,
-                       y: float,
-                       height: float) -> None:
-        """
-        Close side bar animation handler.
-        """
-        self.change_coordinates(start=(x, y, 350, height),
-                                end=(x, y, 400, height),
-                                animation_object=self.animation)
-        self.animation.finished.connect(
-            lambda: self.change_coordinates(start=(x, y, 400, height),
-                                            end=(x, y, 0, height),
-                                            animation_object=self.animation2))
-
-        self.animation2.finished.connect(self.disconnect_animations)
-
-    def _open_sidebar(self,
-                      x: float,
-                      y: float,
-                      height: float) -> None:
-        """
-        Close side bar animation handler.
-        """
-        self.setHidden(False)
-        self.change_coordinates(start=(x, y, 0, height),
-                                end=(x, y, 400, height),
-                                animation_object=self.animation)
-        self.animation.finished.connect(
-            lambda: self.change_coordinates(start=(x, y, 400, height),
-                                            end=(x, y, 350, height),
-                                            animation_object=self.animation2))
-        self.animation2.finished.connect(self.disconnect_animations)
-
-    def open_close_handler(self) -> None:
-        """
-        This method handles the animation of this frame.
-        """
-        x = 0
-        y = 55
-        height = 800
-        if self.is_open:
-            self._close_sidebar(x, y, height)
-            self.is_open = False
-            return
-        self._open_sidebar(x, y, height)
-        self.is_open = True
-
-    def leaveEvent(self, event: object) -> None:
-        """
-        override this method to when mouse leave the
-        Sidebar area, close the sidebar.
-        ---------------------------------------------
-        -> Params
-            event: object
-        """
-        self.open_close_handler()
-
-    def add_sub_widget(self,
-                       name: str,
-                       widget: object,
-                       add_stretch_before: bool = False,
-                       add_stretch_after: bool = False) -> None:
-        """
-        Adds new widget to this frame
-        ---------------------------------------
-        -> Params:
-                name
-                widget
-                add_stretch_before
-                add_stretch_after
-        """
-        if add_stretch_before:
-            self.add_stretch()
-
-        setattr(self, name, widget)
-
-        if add_stretch_after:
-            self.add_stretch()
-
-
-class SidebarButton(Button):
-    """
-    This button will use for in SideBar and like hover method
-    when user hover on it, it will move right with animation
-    and when unhover it will come back to its actual position.
-    """
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.setup_animations()
-
-    def setup_animations(self) -> None:
-        """
-        Setup Animations for this frame.
-        """
-        self.animation = QPropertyAnimation(self, b'geometry')
-        self.animation.setDuration(300)
-        self.animation.setEasingCurve(QEasingCurve.InOutBack)
-
-    def change_coordinates(self, start: tuple, end: tuple,
-                           animation_object: QPropertyAnimation) -> None:
-        """
-        Change the animation setting for the start point and end point.
-        it will call start() function after changing the coordinates
-        -----------------------------------------------------------
-        -> Params:
-                start: (x, y, width, height)
-                end: (x, y, width, height)
-                animation_object: QPropertyAnimation
-        """
-        animation_object.setStartValue(QRect(*start))
-        animation_object.setEndValue(QRect(*end))
-        animation_object.start()
-
-    def get_current_geometry(self) -> tuple:
-        """
-        Return the current position of the widget
-        """
-
-        return self.x(), self.y(), self.width(), self.height()
-
-    def enterEvent(self, event) -> None:
-        """
-        When mouse enter the widget, it will goes
-        to the right with animation.
-        """
-        self.xaxis, self.yaxis, self.w, self.h = self.get_current_geometry()
-        self.xaxis = 9  # Have to hardcode because if user move mouse very fast on the widget, it will confused
-        # self.xaxis += 30
-        x = self.xaxis + 30
-        self.change_coordinates(start=(self.xaxis, self.yaxis, self.w, self.h),
-                                end=(x, self.yaxis, self.w, self.h),
-                                animation_object=self.animation)
-
-    def leaveEvent(self, event) -> None:
-        """
-        When mouse leave the widget, the widget will goes back
-        to its main position.
-        """
-        # self.xaxis += 30
-        x = self.xaxis + 30
-        self.change_coordinates(start=(x, self.yaxis, self.w, self.h),
-                                end=(self.xaxis, self.yaxis, self.w, self.h),
-                                animation_object=self.animation)
-
-
-class DynamicAddRemoveFrame(Frame):
-    """
-    Frame containe add & remove button
-    ----------------------------------
-    -> Params:
-           add_callback: add button function callback
-           remove_callback: remove button function callback
-           add_label: add button label default(+)
-           remove_label: remove button label default(-)
-           **kwargs: Qt Frame widgets options
-    """
-
-    def __init__(self,
-                 add_callback: callable,
-                 remove_callback: callable,
-                 add_label: str = "+",
-                 remove_label: str = "-",
-                 layout: object = Vertical,
-                 width: int = 37,
-                 **kwargs) -> None:
-
-        super().__init__(layout=layout, **kwargs)
-        self.setFixedHeight(80)
-        self.add_button = Button(label=add_label,
-                                 object_name="add-sub-sections",
-                                 callback_function=add_callback,
-                                 width=width)
-
-        self.remove_button = Button(label=remove_label,
-                                    object_name="add-sub-sections",
-                                    callback_function=remove_callback,
-                                    width=width)
-
-
-class ProcessingAnimation(Frame):
-    """
-    Shows colorized animated circle.
-    """
-
-    def __init__(self,
-                 parent: object,
-                 start_color: str = "#FFB600",
-                 end_color: str = "#0058A7",
-                 grid_positions: tuple = None) -> None:
-        super().__init__(parent=parent, layout=Vertical)
-        self.setFixedSize(15, 15)
-        self.setStyleSheet("border-radius:7px;")
-        self.grid_positions = grid_positions
-
-        self.effect = QGraphicsColorizeEffect()
-        self.effect.setColor(QColor("transparent"))
-        self.setGraphicsEffect(self.effect)
-
-        self.animation = QPropertyAnimation(targetObject=self.effect,
-                                            propertyName=b'color',
-                                            duration=400,
-                                            loopCount=-1,
-                                            startValue=QColor(start_color),
-                                            endValue=QColor(end_color))
-        self.animation.setEasingCurve(QEasingCurve.InOutQuad)
-
-    def start(self) -> None:
-        """
-        Start animation.
-        """
-        self.animation.start()
-
-    def stop(self) -> None:
-        """
-        Stop animation and set effect color to transparent.
-        """
-        self.animation.stop()
-        self.effect.setColor(QColor("transparent"))
-
-
 class DateEntry(Frame):
 
     def __init__(self,
@@ -3032,13 +1866,11 @@ class Stretch(QWidget):
         super().__init__()
         self.setSizePolicy(horizontal_stretch, vertical_stretch)
 
-
 WIDGETS_LIST = {
     "entry": LabelEntry,
     "combobox": LabelCombobox,
 }
 
 VALIDATORS = {
-    "string": ONLY_STRING_SPACE_PATTERN,
-    # "decimal": JUST_FLOAT_PATTERN
+    "string": ONLY_STRING_SPACE_PATTERN
 }
