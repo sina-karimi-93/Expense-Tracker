@@ -97,21 +97,52 @@ class MainFrame(Frame):
                        title="Error",
                        message=error)
     
+    def get_file_path(self, extension: str) -> str:
+        """
+        Open a dialog so user can select a folder
+        to get its path, then concat the path with
+        the extension to create complete file path.
+        ------------------------------------------
+        -> Params
+            extension: str
+        <- Return
+            str
+        """
+        directory = QFileDialog.getExistingDirectory()
+        if not directory:
+            return
+        file_name = f"{datetime.now().strftime(DATE_FORMAT)}.{extension}"
+        path = f"{directory}\\{file_name}"
+        return path
+
+
     def export_excel(self) -> None:
         """
         Export the current filtered expenses to
         the excel file.
         """
-        handler = ExcelHandler()
+        path =self.get_file_path("xlsx")
+        if not path:
+            return
+        expenses = self.data_handler.get_all_as_table()
+        try:
+            with ExcelHandler() as handler:
+                handler.create_new()
+                handler.add_data(expenses)
+                handler.save_as(path)
+        except Exception:
+            MessageBox(self,
+                       "high",
+                       "Error",
+                       "Couldn't save the excel file.")
+
 
     def export_csv(self) -> None:
         """
         Export the expenses to a csv file.
         """
-        directory = QFileDialog.getExistingDirectory()
-        if not directory:
+        path =self.get_file_path("csv")
+        if not path:
             return
         expenses = list(self.data_handler.get_all_as_table())
-        file_name = f"{datetime.now().strftime(DATE_FORMAT)}.csv"
-        path = f"{directory}/{file_name}"
         write_csv(path=path, data=expenses)

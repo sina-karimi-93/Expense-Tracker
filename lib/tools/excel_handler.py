@@ -269,6 +269,18 @@ class ExcelHandler:
             value: anything → int, float, datetime, string
         """
         self.sheet.Cells(*cell_position).value = value
+    
+    def add_data(self, data: list) -> None:
+        """
+        Add data to the current active sheet.
+        Data must be list of list(tuple).
+        -------------------------------------
+        -> Params
+            data: list
+        """
+        for row_index, row in enumerate(data, start=1):
+            for column_index, column in enumerate(row, start=1):
+                self.update_cell((row_index, column_index), column)
 
     def save(self) -> None:
         """
@@ -280,6 +292,7 @@ class ExcelHandler:
         """
         Save current work book to new file.
         """
+        print(file_path)
         self.work_book.SaveAs(file_path)
 
     def close(self)-> None:
@@ -295,11 +308,7 @@ if __name__ == "__main__":
     from os import getcwd
     root = getcwd()
     with ExcelHandler() as handler:
-        handler.open_excel(f"{root}\data\order analyzer data excel.xlsx")
-        now = time.time()
-        data = list(handler.fetch_all())
-        end = time.time() - now
-        print(data[0])
-        print("==========================")
-        print(len(data))
-        print(end, " Seconds")
+        handler: ExcelHandler
+        handler.create_new()
+        handler.add_data([[1,2,3,4,5]])
+        handler.save_as(f"{root}/test.xlsx")

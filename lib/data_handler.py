@@ -6,6 +6,7 @@ from collections import defaultdict
 from .interface.utils import load_json
 from .interface.utils import write_json
 from .constants import TABLE_HEADERS
+from .constants import DATE_FORMAT
 
 class DataHandler:
     """
@@ -160,4 +161,7 @@ class DataHandler:
         """
         yield TABLE_HEADERS
         for expense in self.expenses:
-            yield tuple(expense.values())
+            row = list(expense.values())
+            row[-1] = row[-1].strftime(DATE_FORMAT)
+            print(row)
+            yield row
